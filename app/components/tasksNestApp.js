@@ -75,23 +75,25 @@ const TasksNestApp = ({ session }) => {
   return (
     <div className="min-h-screen mx-auto text-white px-4 py-6">
       {/* Header */}
-      <header className="max-w-3xl mx-auto bg-gray-400 shadow-lg rounded-lg flex items-center justify-between p-4 mb-8">
+      <header className="max-w-3xl mx-auto bg-gray-400 shadow-lg rounded-lg flex items-center justify-between p-4 mb-20">
         <div className="flex items-center gap-4">
-          <h3 className="text-lg text-gray-900">
+          <h3 className="text-3xl text-gray-900">
             <strong>TASKS NEST</strong>
           </h3>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center ">
           {session && (
-            <div className="text-lg text-gray-900 flex items-center pr-4">
+            <div className="text-lg text-gray-900 flex items-center mr-4 bg-gray-500 p-4 rounded-2xl">
               <Image
-                className="rounded-full mr-2"
+                className="rounded-full mr-2 border-2 border-gray-400"
                 src={session?.user?.image}
                 alt="Avatar"
                 width="50"
                 height="50"
               />
-              <span className="font-bold">{session?.user?.name}</span>
+              <span className="font-bold text-white">
+                {session?.user?.name}
+              </span>
             </div>
           )}
           <button
@@ -105,7 +107,7 @@ const TasksNestApp = ({ session }) => {
 
       {/* Main */}
       <div className="max-w-3xl border-gray-800 border-solid mx-auto  p-6 rounded-xl shadow-lg">
-        <h1 className="text-3xl font-bold mb-6 text-center">📝 My Tasks</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center">My Tasks</h1>
 
         {removedTask.name && (
           <div className="mb-4 p-3 bg-yellow-600 text-white rounded-md text-center">
@@ -142,7 +144,7 @@ const TasksNestApp = ({ session }) => {
           {tasks.map((task, index) => (
             <li
               key={index}
-              className={`flex flex-col bg-gray-700 opacity-80 p-4 rounded-md  ${
+              className={`flex flex-col bg-gray-900 opacity-80 p-4 rounded-md  ${
                 task.done ? "opacity-60, bg-green-200" : ""
               }`}
             >
