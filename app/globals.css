@@ -1,26 +1,117 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+body,
+html {
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(9, 49, 121, 1) 29%,
+    rgba(80, 0, 120, 1) 58%
+  );
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+ol {
+  list-style: decimal;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.mainApp {
+  margin: 0 auto;
+  margin-top: 100px;
+  border-radius: 10px;
+  background-color: #536156;
+  max-width: 50%;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.mainTitle {
+  font-size: 26px;
+  margin-bottom: 0;
+}
+
+.login {
+  font-size: 16px;
+}
+
+.login:hover {
+  cursor: pointer;
+}
+
+nav {
+  margin-bottom: 10px;
+}
+
+.taskCreate input {
+  width: 70%;
+  margin-right: 10px;
+  border: 1px solid white;
+}
+.actionButtons button {
+  font-size: 30px;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+.taskCreate button {
+  width: 30%;
+}
+
+.editNotification {
+  background: #fff;
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  min-width: 400px;
+}
+
+.notification {
+  position: absolute;
+  top: 70px;
+  right: 0;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.hideNotification {
+  right: -200px;
+}
+
+.notification span {
+  color: red;
+  margin-bottom: 5px;
+}
+
+li {
+  font-size: 18px;
+}
+
+.editNotification input {
+  border: 1px solid #cfcfcf;
+  height: 40px;
+  border-radius: 5px;
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.actionButtons input {
+  width: 30px;
+  height: 30px;
+}
+
+textarea {
+  height: 100px;
+}
+
+header {
+  height: 60px;
 }
