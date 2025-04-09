@@ -115,3 +115,32 @@ textarea {
 header {
   height: 60px;
 }
+
+.task-creator {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.task-creator input {
+  width: 100%;
+}
+
+.task-creator button {
+  font-size: 50px;
+  font-weight: 300;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #c1e7d3;
+  padding: 0 10px;
+}
+
+#deadline {
+  color: #8995b1;
+}
+
+.sectionName {
+  color: #0165fc;
+  font-size: 14px;
+}

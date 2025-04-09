@@ -4,6 +4,7 @@ import EditTaskModal from "./editTaskModal";
 import { signOut } from "next-auth/react";
 import Popup from "./popup";
 import Image from "next/image";
+import { MdAdd } from "react-icons/md";
 
 const TasksNestApp = ({ session }) => {
   const [inputValue, setInputvalue] = useState("");
@@ -12,6 +13,7 @@ const TasksNestApp = ({ session }) => {
   const [edited, setEdited] = useState(null);
   const [show, setShow] = useState(false);
   const [confirmDeleteTask, setConfirmDeleteTask] = useState(null);
+  const [description, setDescription] = useState("");
   const [deadline, setDeadline] = useState("");
 
   const date = new Date("mm-dd-yyyy");
@@ -38,16 +40,22 @@ const TasksNestApp = ({ session }) => {
   };
 
   const handleInput = (e) => setInputvalue(e.target.value);
-
+  const handleInputDescription = (e) => setDescription(e.target.value);
   // Create task
   const createTask = () => {
     if (inputValue !== "") {
       setTasks([
         ...tasks,
-        { done: false, name: inputValue, deadline: deadline },
+        {
+          done: false,
+          name: inputValue,
+          description: description,
+          deadline: deadline,
+        },
       ]);
     }
     setInputvalue("");
+    setDescription("");
     setDeadline(""); // Resetăm
   };
 
@@ -71,7 +79,6 @@ const TasksNestApp = ({ session }) => {
     signOut();
   };
 
-  console.log(session);
   return (
     <div className="min-h-screen mx-auto text-white px-4 py-6">
       {/* Header */}
@@ -117,28 +124,56 @@ const TasksNestApp = ({ session }) => {
         )}
 
         {/* Task Creator */}
-        <div className="flex gap-2 mb-6">
-          <input
-            onChange={handleInput}
-            value={inputValue}
-            type="text"
-            placeholder="Enter task"
-            className="flex-1  text-white border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <input
-            onChange={(e) => setDeadline(e.target.value)}
-            value={deadline}
-            type="date"
-            className="border border-gray-600  text-white rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+
+        <div className="flex gap-2 mb-6 task-creator">
+          <div>
+            <label for="title">Task title *</label>
+            <input
+              id="title"
+              required
+              onChange={handleInput}
+              value={inputValue}
+              type="text"
+              placeholder="Task title*"
+              className="flex-1  text-white border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+          <div>
+            <label for="description">Task Description</label>
+            <input
+              id="description"
+              onChange={handleInputDescription}
+              value={description}
+              type="text"
+              placeholder="Describe your task..."
+              className="flex-1  text-white border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+          <div>
+            <label for="deadline">Deadline</label>
+            <input
+              id="deadline"
+              onChange={(e) => setDeadline(e.target.value)}
+              value={deadline}
+              type="date"
+              className="border border-gray-600  text-white rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
           <button
             onClick={createTask}
-            className="bg-green-800 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-lg"
+            className="bg-green-800 hover:bg-green-600 text-white font-semibold rounded-lg"
           >
-            Add task
+            <MdAdd />
           </button>
         </div>
-
+        <div className="filter flex border-t-1 border-white">
+          <button className="mr-4 px-4 py-2 hover:text-red-200">
+            Active tasks
+          </button>
+          <button className="mr-2 px-4 py-2 hover:text-red-200">Done</button>
+          <button className="mr-2 px-4 py-2 hover:text-red-200">All</button>
+          <button className="mr-2 px-4 py-2 hover:text-red-200">Expired</button>
+        </div>
         {/* Tasks */}
         <ul className="space-y-4">
           {tasks.map((task, index) => (
@@ -149,13 +184,23 @@ const TasksNestApp = ({ session }) => {
               }`}
             >
               <div className="flex justify-between">
-                <p
-                  className={`text-lg ${
-                    task.done ? "line-through text-gray-400" : "text-white"
-                  }`}
-                >
-                  {task.name}
-                </p>
+                <div>
+                  <span className="sectionName">Title</span>
+                  <p
+                    className={`text-lg ${
+                      task.done ? "line-through text-gray-400" : "text-white"
+                    }`}
+                  >
+                    {task.name}
+                  </p>
+                  {task.description && (
+                    <div>
+                      <span className="sectionName">Description</span>
+                      <p>{task.description}</p>
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex gap-2 items-center">
                   <input
                     type="checkbox"
