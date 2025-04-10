@@ -4,11 +4,26 @@ body,
 html {
   background: rgb(2, 0, 36);
   background: linear-gradient(
-    90deg,
+    257deg,
     rgba(2, 0, 36, 1) 0%,
-    rgba(9, 49, 121, 1) 29%,
     rgba(80, 0, 120, 1) 58%
   );
+}
+
+.logoDet {
+  color: #191334;
+}
+
+.logo {
+  color: #ffffff;
+  padding: 0 10px;
+  border-radius: 5px;
+}
+
+.avatarContainer {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 25px;
+  padding: 2px 20px 2px 2px;
 }
 
 ol {
@@ -43,7 +58,7 @@ nav {
 .taskCreate input {
   width: 70%;
   margin-right: 10px;
-  border: 1px solid white;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 .actionButtons button {
   font-size: 30px;
@@ -124,6 +139,11 @@ header {
 
 .task-creator input {
   width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.task-creator input:focus {
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
 }
 
 .task-creator button {
@@ -143,4 +163,8 @@ header {
 .sectionName {
   color: #0165fc;
   font-size: 14px;
+}
+
+.task {
+  transition: all 0.5s ease;
 }

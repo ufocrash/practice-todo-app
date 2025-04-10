@@ -5,6 +5,8 @@ import { signOut } from "next-auth/react";
 import Popup from "./popup";
 import Image from "next/image";
 import { MdAdd } from "react-icons/md";
+import { SiTask } from "react-icons/si";
+import { TbLogout } from "react-icons/tb";
 
 const TasksNestApp = ({ session }) => {
   const [inputValue, setInputvalue] = useState("");
@@ -15,19 +17,23 @@ const TasksNestApp = ({ session }) => {
   const [confirmDeleteTask, setConfirmDeleteTask] = useState(null);
   const [description, setDescription] = useState("");
   const [deadline, setDeadline] = useState("");
+  const [filter, setFilter] = useState("all");
 
   const date = new Date("mm-dd-yyyy");
   console.log(date);
 
+  // Set tasks from local storage
   useEffect(() => {
     const savedTasks = localStorage.getItem("tasks");
     if (savedTasks) setTasks(JSON.parse(savedTasks));
   }, []);
 
+  // Save tasks in localStorage
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
+  // Save user info in localStorage
   useEffect(() => {
     if (session) {
       localStorage.setItem("user", JSON.stringify(session.user));
@@ -54,9 +60,10 @@ const TasksNestApp = ({ session }) => {
         },
       ]);
     }
+    // Resetăm
     setInputvalue("");
     setDescription("");
-    setDeadline(""); // Resetăm
+    setDeadline("");
   };
 
   const deleteTask = (taskName) => {
@@ -79,20 +86,29 @@ const TasksNestApp = ({ session }) => {
     signOut();
   };
 
+  const filteredTasks = tasks.filter((task) => {
+    if (filter === "done") return task.done;
+    if (filter === "all") return true;
+    if (filter === "active") return !task.done;
+    if (filter === "deadline") return task.deadline;
+    return true;
+  });
+
   return (
     <div className="min-h-screen mx-auto text-white px-4 py-6">
       {/* Header */}
-      <header className="max-w-3xl mx-auto bg-gray-400 shadow-lg rounded-lg flex items-center justify-between p-4 mb-20">
+      <header className="max-w-3xl mx-auto bg-[#2e66d7] shadow-lg rounded-lg flex items-center justify-between p-4 mb-20">
         <div className="flex items-center gap-4">
-          <h3 className="text-3xl text-gray-900">
+          <h1 className="text-3xl logo flex items-center">
+            <SiTask className="logoDet pr-1 mt-1" />
             <strong>TASKS NEST</strong>
-          </h3>
+          </h1>
         </div>
-        <div className="flex items-center ">
+        <div className="flex items-center">
           {session && (
-            <div className="text-lg text-gray-900 flex items-center mr-4 bg-gray-500 p-4 rounded-2xl">
+            <div className="text-lg text-gray-900 flex items-center avatarContainer mr-4">
               <Image
-                className="rounded-full mr-2 border-2 border-gray-400"
+                className="rounded-full mr-2 border-2 border-[#0c45b1]"
                 src={session?.user?.image}
                 alt="Avatar"
                 width="50"
@@ -105,9 +121,10 @@ const TasksNestApp = ({ session }) => {
           )}
           <button
             onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded transition"
+            className="text-gray-100 flex items-center"
           >
-            Logout
+            <span className="mr-1">Logout</span>
+            <TbLogout />
           </button>
         </div>
       </header>
@@ -127,7 +144,7 @@ const TasksNestApp = ({ session }) => {
 
         <div className="flex gap-2 mb-6 task-creator">
           <div>
-            <label for="title">Task title *</label>
+            <label htmlFor="title">Task title *</label>
             <input
               id="title"
               required
@@ -135,28 +152,28 @@ const TasksNestApp = ({ session }) => {
               value={inputValue}
               type="text"
               placeholder="Task title*"
-              className="flex-1  text-white border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="flex-1  text-white border rounded-lg px-4 py-2 focus:outline-none"
             />
           </div>
           <div>
-            <label for="description">Task Description</label>
+            <label htmlFor="description">Task Description</label>
             <input
               id="description"
               onChange={handleInputDescription}
               value={description}
               type="text"
               placeholder="Describe your task..."
-              className="flex-1  text-white border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="flex-1  text-white border  rounded-lg px-4 py-2 focus:outline-none "
             />
           </div>
           <div>
-            <label for="deadline">Deadline</label>
+            <label htmlFor="deadline">Deadline</label>
             <input
               id="deadline"
               onChange={(e) => setDeadline(e.target.value)}
               value={deadline}
               type="date"
-              className="border border-gray-600  text-white rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border text-white rounded-lg px-2 py-2 focus:outline-none "
             />
           </div>
           <button
@@ -166,21 +183,59 @@ const TasksNestApp = ({ session }) => {
             <MdAdd />
           </button>
         </div>
-        <div className="filter flex border-t-1 border-white">
-          <button className="mr-4 px-4 py-2 hover:text-red-200">
-            Active tasks
-          </button>
-          <button className="mr-2 px-4 py-2 hover:text-red-200">Done</button>
-          <button className="mr-2 px-4 py-2 hover:text-red-200">All</button>
-          <button className="mr-2 px-4 py-2 hover:text-red-200">Expired</button>
+        {/* Filters */}
+        <div className="filter flex border-t-1 border-white items-center">
+          <span className="text-blue-700"> Filter tasks {">"}</span>
+          <div>
+            <button
+              onClick={() => setFilter("all")}
+              className={`mr-4 px-4 py-2  ${
+                filter === "all"
+                  ? "text-white-900 underline font-bold decoration-2"
+                  : ""
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setFilter("active")}
+              className={`mr-4 px-4 py-2  ${
+                filter === "active"
+                  ? "text-white-900 underline font-bold decoration-2"
+                  : ""
+              }`}
+            >
+              Active tasks
+            </button>
+            <button
+              onClick={() => setFilter("done")}
+              className={`mr-4 px-4 py-2  ${
+                filter === "done"
+                  ? "text-white-900 underline font-bold decoration-2"
+                  : ""
+              }`}
+            >
+              Done
+            </button>
+            <button
+              onClick={() => setFilter("deadline")}
+              className={`mr-4 px-4 py-2 ${
+                filter === "deadline"
+                  ? "text-white-900 underline font-bold decoration-2"
+                  : ""
+              }`}
+            >
+              Important
+            </button>
+          </div>
         </div>
         {/* Tasks */}
         <ul className="space-y-4">
-          {tasks.map((task, index) => (
+          {filteredTasks.map((task, index) => (
             <li
               key={index}
-              className={`flex flex-col bg-gray-900 opacity-80 p-4 rounded-md  ${
-                task.done ? "opacity-60, bg-green-200" : ""
+              className={`flex flex-col bg-gray-900 opacity-80 p-4 rounded-md task  ${
+                task.done ? "opacity-60 taskTransition, bg-green-100" : ""
               }`}
             >
               <div className="flex justify-between">
@@ -208,10 +263,10 @@ const TasksNestApp = ({ session }) => {
                     onChange={(e) => handleCheckbox(e, task.name)}
                     className="w-5 h-5 accent-green-800 text-green-500 bg-gray-800 border-gray-600"
                   />
-                  {task.deadline ? `🗓️${task.deadline}` : ""}
                   {!task.done && (
                     <button onClick={() => handleShowModal(task)}>📝</button>
                   )}
+                  {task.deadline ? `🗓️${task.deadline}` : ""}
                   <button onClick={() => setConfirmDeleteTask(task.name)}>
                     🗑️
                   </button>
